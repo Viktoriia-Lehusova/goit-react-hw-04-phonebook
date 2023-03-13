@@ -2,9 +2,12 @@ import { useState } from 'react';
 import shortid from 'shortid';
 import { StyledForm, StyledLabel, StyledInput, BtnAdd } from './Form.styled';
 
-export default function Form() {
+export default function Form({ onSubmit }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const nameInputId = shortid.generate();
+  const numberInputId = shortid.generate();
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -22,9 +25,23 @@ export default function Form() {
         return;
     }
   };
+  const formSubmit = evt => {
+    evt.preventDefault();
+
+    onSubmit({ name, number });
+    console.log(name);
+    console.log(number);
+
+    reset();
+  };
+
+  const reset = () => {
+    setName('');
+    setNumber('');
+  };
 
   return (
-    <StyledForm>
+    <StyledForm onSubmit={formSubmit}>
       <StyledLabel>
         Name
         <StyledInput
@@ -35,7 +52,7 @@ export default function Form() {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           onChange={handleChange}
-          // id={name}
+          id={nameInputId}
         />
       </StyledLabel>
       <StyledLabel>
@@ -48,7 +65,7 @@ export default function Form() {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           onChange={handleChange}
-          // id={this.numberInputId}
+          id={numberInputId}
         />
       </StyledLabel>
 
@@ -56,69 +73,3 @@ export default function Form() {
     </StyledForm>
   );
 }
-
-// export default class Form extends Component {
-//   state = {
-//     name: '',
-//     number: '',
-//   };
-
-//   nameInputId = shortid.generate();
-//   numberInputId = shortid.generate();
-
-//   handleChange = event => {
-//     const { name, value } = event.currentTarget;
-
-//     this.setState({ [name]: value });
-//   };
-
-//   formSubmit = event => {
-//     event.preventDefault();
-
-//     this.props.onSubmit(this.state);
-
-//     this.reset();
-//   };
-
-//   reset = () => {
-//     this.setState({
-//       name: '',
-//       number: '',
-//     });
-//   };
-
-//   render() {
-//     return (
-//       <StyledForm onSubmit={this.formSubmit}>
-//         <StyledLabel htmlFor={this.nameInputId}>
-//           Name
-//           <StyledInput
-//             type="text"
-//             value={this.state.name}
-//             name="name"
-//             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-//             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-//             required
-//             onChange={this.handleChange}
-//             id={this.nameInputId}
-//           />
-//         </StyledLabel>
-//         <StyledLabel htmlFor={this.numberInputId}>
-//           Number
-//           <StyledInput
-//             type="tel"
-//             value={this.state.number}
-//             name="number"
-//             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-//             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-//             required
-//             onChange={this.handleChange}
-//             id={this.numberInputId}
-//           />
-//         </StyledLabel>
-
-//         <BtnAdd type="submit">Add contact</BtnAdd>
-//       </StyledForm>
-//     );
-//   }
-// }
